@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carbon dioxide, reconsidered · an interactive explainer</title>
+<meta name="description" content="An interactive explainer on carbon dioxide, cells and aging.">
+<meta name="theme-color" content="#07060a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="js/data.js" defer></script>
+<script src="js/cell.js" defer></script>
+<script src="js/source-scene.js" defer></script>
+<script src="js/main.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#exhaust">Skip to the content</a>
+
+<!-- Progress rail -->
+<nav class="rail" aria-label="Sections">
+  <ol>
+    <li><a href="#hero" data-rail="hero"><span class="rail-label">The cell</span></a></li>
+    <li><a href="#exhaust" data-rail="exhaust"><span class="rail-label">Exhaust, or signal?</span></a></li>
+    <li><a href="#source" data-rail="source"><span class="rail-label">Where CO2 comes from</span></a></li>
+    <li><a href="#low" data-rail="low"><span class="rail-label">When it runs low</span></a></li>
+    <li><a href="#night" data-rail="night"><span class="rail-label">Night</span></a></li>
+    <li><a href="#animals" data-rail="animals"><span class="rail-label">Animals</span></a></li>
+    <li><a href="#womb" data-rail="womb"><span class="rail-label">The womb</span></a></li>
+    <li><a href="#words" data-rail="words"><span class="rail-label">Key ideas</span></a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="hero" aria-label="Interactive cell">
+  <div class="plate-wrap hero-plate" data-plate-fallback="burrow" aria-hidden="true"><div class="plate" data-plate="burrow"></div></div>
+  <canvas class="cell-canvas hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
+
+  <div class="hero-text">
+    <p class="kicker">Carbon dioxide · Cells · Aging</p>
+    <h1 class="hero-title" id="hero-title">
+      <span class="word">Carbon</span> <span class="word">dioxide,</span> <span class="word">reconsidered</span>
+    </h1>
+    <p class="hero-sub">What if the gas we breathe out is a protective signal, not exhaust?</p>
+  </div>
+
+  <div class="hero-stage" id="hero-stage" aria-hidden="true"></div>
+
+  <div class="hero-dial">
+    <div class="dial" id="co2-dial" role="slider" tabindex="0"
+         aria-label="Carbon dioxide around the cell" aria-valuemin="0" aria-valuemax="100" aria-valuenow="65" aria-valuetext="Rich · burrow">
+      <svg class="dial-svg" viewBox="0 0 260 214" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="dial-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#7a6f8f"/>
+            <stop offset="0.5" stop-color="#5ef2d6"/>
+            <stop offset="1" stop-color="#ffb347"/>
+          </linearGradient>
+          <filter id="dial-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path class="dial-track" id="dial-track" d=""/>
+        <path class="dial-fill" id="dial-fill" d="" stroke="url(#dial-grad)" filter="url(#dial-glow)"/>
+        <g class="dial-snaps" id="dial-snaps"></g>
+        <g class="dial-thumb" id="dial-thumb">
+          <circle class="dial-thumb-pulse" r="17"/>
+          <circle class="dial-thumb-core" r="13"/>
+        </g>
+        <text class="dial-center-label" x="130" y="118" text-anchor="middle">CO2</text>
+        <text class="dial-center-word" id="dial-center-word" x="130" y="146" text-anchor="middle">Rich · burrow</text>
+      </svg>
+      <div class="dial-bubble" id="dial-bubble" aria-hidden="true">Rich · burrow</div>
+    </div>
+    <div class="dial-ends" aria-hidden="true">
+      <span class="dial-end dial-end--low"><i class="dial-dot" aria-hidden="true"></i>Low CO2 — overbreathing · stress · darkness</span>
+      <span class="dial-end dial-end--high"><i class="dial-dot" aria-hidden="true"></i>Rich CO2 — burrow · womb</span>
+    </div>
+    <p class="dial-caption" aria-live="polite"><span id="dial-caption">Rich: locks release; mitochondria glow; the membrane slows and deepens.</span></p>
+    <p class="dial-hint" id="dial-hint">Drag the dial, or drag up and down on the cell.</p>
+  </div>
+
+  <p class="hero-label">Illustration of the argument, not a physiological model</p>
+
+  <a class="scroll-cue" href="#exhaust"><span>Read the argument</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+</section>
+
+<!-- ============ 1. EXHAUST OR SIGNAL ============ -->
+<section id="exhaust" class="section section--exhaust">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <h2 class="section-title">Exhaust, or signal?</h2>
+    </header>
+
+    <p class="lead reveal" data-passage="tox">CO2 is commonly thought of as a toxin.</p>
+
+    <div class="pull-quote pull-quote--xl reveal">
+      <p data-passage="Q1">Very few biologists recognize carbon dioxide’s role as a fundamental, universal protective factor. It may be helpful to consider some of the ways carbon dioxide might be controlling situations that otherwise are poorly understood.</p>
+    </div>
+
+    <div class="split">
+      <div class="pull-quote pull-quote--sm reveal">
+        <p data-passage="g">Increasing carbon dioxide doesn’t necessarily cause acidosis, and acidosis caused by carbon dioxide isn’t as harmful as lactic acidosis.</p>
+      </div>
+
+      <figure class="toy toy--exhaust reveal">
+        <div class="toy-stage">
+          <canvas id="exhaust-canvas" aria-hidden="true"></canvas>
+        </div>
+        <div class="seg" role="group" aria-label="Illustration mode">
+          <button type="button" class="seg-btn is-on" data-mode="exhaust" aria-pressed="true">Exhaust</button>
+          <span class="seg-arrow" aria-hidden="true">⇄</span>
+          <button type="button" class="seg-btn" data-mode="signal" aria-pressed="false">Signal</button>
+        </div>
+        <figcaption>Our illustration. Exhaust: the motes stream away like smoke. Signal: they curl back and gather around the cell.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. WHERE CO2 COMES FROM ============ -->
+<section id="source" class="section section--source">
+  <div class="source-pin" id="source-pin">
+    <figure class="source-fig">
+      <div class="source-head" id="source-head">
+        <div class="wrap">
+          <header class="section-head reveal">
+            <h2 class="section-title">Where the CO2 comes from</h2>
+          </header>
+
+          <div class="pull-quote pull-quote--lg source-a1 reveal">
+            <p data-passage="a1">The brain has a high rate of oxidative metabolism, and so it forms a very large proportion of the carbon dioxide produced by an organism.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="source-stage" id="source-stage" data-view="brain">
+        <canvas class="source-canvas" id="source-canvas" role="img"
+                aria-label="Our drawing: a small cat and a huge crocodile in amber light, each with a glowing brain core of the same size, teal motes rising from both. Zooming in brings the two heads side by side."></canvas>
+      </div>
+
+      <div class="source-ui" id="source-ui">
+        <div class="source-controls">
+          <p class="source-hint" id="source-hint" aria-hidden="true">Drag sideways on the scene</p>
+          <div class="scale-scrub" role="group" aria-label="Scale">
+            <button type="button" class="seg-btn" data-scale="body" aria-pressed="false">Scale by body</button>
+            <div class="source-scrub" id="source-scrub" role="slider" tabindex="0"
+                 aria-label="Zoom from whole bodies to brains" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-valuetext="Brains side by side">
+              <i class="source-scrub-track" aria-hidden="true"><b id="source-scrub-fill"></b></i>
+              <i class="source-scrub-thumb" id="source-scrub-thumb" aria-hidden="true"></i>
+            </div>
+            <button type="button" class="seg-btn is-on" data-scale="brain" aria-pressed="true">Scale by brain</button>
+          </div>
+          <p class="source-caption">Our illustration, not to scale. <em>Scale by body</em>: the whole animals, the crocodile vastly bigger. <em>Scale by brain</em>: the camera moves in on the heads, where the glowing brains are drawn the same size. Teal motes stand in for CO2.</p>
+        </div>
+
+        <div class="pull-quote source-payoff" id="source-payoff">
+          <p data-passage="a2">For example, a cat’s brain is about the size of a crocodile’s, and their oxygen consumption at rest is similar, despite their tremendous difference in body size.</p>
+        </div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 3. WHEN IT RUNS LOW ============ -->
+<section id="low" class="section section--low">
+  <div class="plate-wrap low-plate" data-plate-fallback="cave" aria-hidden="true"><div class="plate" data-plate="cave"></div></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <h2 class="section-title">When CO2 runs low</h2>
+      <p class="section-note">Scroll: the cell beside the text slides from rich to low CO2, and the branches draw themselves.</p>
+    </header>
+  </div>
+
+  <div class="low-pin" id="low-pin">
+    <div class="low-visual" id="low-visual">
+      <div class="low-canvas-wrap">
+        <canvas class="cell-canvas" id="low-canvas" aria-hidden="true"></canvas>
+        <div class="low-meter" aria-hidden="true"><span>rich</span><i><b id="low-meter-fill"></b></i><span>low</span></div>
+      </div>
+      <figure class="tree">
+        <svg class="tree-svg" id="tree-svg" viewBox="0 0 468 262" role="img" aria-label="Branching diagram: CO2 falls, leading to lactic acid (inflammation, fibrosis) and, over a prolonged fall, glycation and probably histone methylation">
+          <g class="edges">
+            <path class="edge" data-node="a" pathLength="1" d="M106 78 C113 78 113 39 120 39"/>
+            <path class="edge" data-node="a-leaf" pathLength="1" d="M236 39 C250 39 250 18 264 18"/>
+            <path class="edge" data-node="a-leaf" pathLength="1" d="M236 39 C250 39 250 60 264 60"/>
+            <path class="edge" data-node="b" pathLength="1" d="M106 78 C113 78 113 116 120 116"/>
+            <path class="edge" data-node="b-leaf" pathLength="1" d="M250 116 C257 116 257 116 264 116"/>
+            <path class="edge edge--spec" data-node="spec" d="M362 144 C362 149 362 149 362 154"/>
+            <path class="edge edge--side" data-node="side" d="M362 210 C362 214 349 214 349 218"/>
+          </g>
+          <g class="node" data-node="root" transform="translate(2 60)">
+            <rect width="104" height="36" rx="18"/>
+            <text x="52" y="24" text-anchor="middle">CO2 falls</text>
+          </g>
+          <g class="node" data-node="a" transform="translate(120 11)">
+            <rect width="116" height="56" rx="14"/>
+            <text x="58" y="23" text-anchor="middle">lactic acid</text>
+            <text x="58" y="45" text-anchor="middle">rises</text>
+          </g>
+          <g class="node node--leaf" data-node="a-leaf" transform="translate(264 0)">
+            <rect width="140" height="36" rx="12"/>
+            <text x="70" y="24" text-anchor="middle">inflammation</text>
+          </g>
+          <g class="node node--leaf" data-node="a-leaf" transform="translate(264 42)">
+            <rect width="140" height="36" rx="12"/>
+            <text x="70" y="24" text-anchor="middle">fibrosis</text>
+          </g>
+          <g class="node" data-node="b" transform="translate(120 88)">
+            <rect width="130" height="56" rx="14"/>
+            <text x="65" y="23" text-anchor="middle">a prolonged</text>
+            <text x="65" y="45" text-anchor="middle">fall</text>
+          </g>
+          <g class="node node--leaf" data-node="b-leaf" transform="translate(264 88)">
+            <rect width="196" height="56" rx="14"/>
+            <text x="98" y="23" text-anchor="middle">proteins more prone</text>
+            <text x="98" y="45" text-anchor="middle">to glycation</text>
+          </g>
+          <g class="node node--spec" data-node="spec" transform="translate(128 154)">
+            <rect width="332" height="56" rx="14"/>
+            <text x="166" y="23" text-anchor="middle">probably adds to histone methylation</text>
+            <text x="166" y="45" text-anchor="middle">(increases with age) · speculation</text>
+          </g>
+          <g class="node node--side" data-node="side" transform="translate(238 218)">
+            <rect width="222" height="36" rx="12"/>
+            <text x="111" y="24" text-anchor="middle">DNA methylation · aging</text>
+          </g>
+        </svg>
+        <figcaption>The dashed branch is speculative.</figcaption>
+      </figure>
+    </div>
+
+    <ol class="low-steps" id="low-steps">
+      <li class="low-step" data-step="0">
+        <p class="claim-block">Falling CO2 raises lactic acid, which promotes inflammation and fibrosis; a prolonged fall makes proteins more prone to glycation, and probably adds to the histone methylation that increases with age.</p>
+        <div class="pull-quote pull-quote--sm">
+          <p data-passage="b">In eccentric exercise and denervation, less oxygen is used and less carbon dioxide is produced, while lactic acid increases, displacing carbon dioxide, and more fat is oxidized. Prolonged stress similarly decreases carbon dioxide and increases lactate, while increasing the use of fat.</p>
+        </div>
+      </li>
+      <li class="low-step" data-step="1">
+        <p class="step-label">Branch: lactic acid</p>
+        <div class="pull-quote">
+          <p data-passage="c1">On a slightly longer time scale, a reduction of carbon dioxide can increase the production of lactic acid, which is a promoter of inflammation and fibrosis.</p>
+        </div>
+      </li>
+      <li class="low-step" data-step="2">
+        <p class="step-label">Branch: a prolonged fall</p>
+        <div class="pull-quote">
+          <p data-passage="Q4">A prolonged decrease in carbon dioxide can increase the susceptibility of proteins to glycation (the addition of aldehydes, from polyunsaturated fat peroxidation or methylglyoxal from lactate metabolism, to amino groups), and a similar process is likely to contribute to the methylation of histones, a process that increases with aging.</p>
+        </div>
+        <p class="footnote">The histone link at the end is speculative.</p>
+      </li>
+      <li class="low-step" data-step="3">
+        <p class="step-label">Side branch: methylation</p>
+        <div class="pull-quote pull-quote--sm">
+          <p data-passage="c2">With aging, DNA methylation is increased.</p>
+        </div>
+        <div class="pull-quote">
+          <p data-passage="Q2">One possibility is that methylation stabilizes and protects cells when growth and regeneration aren’t possible, and that it’s likely to increase when CO2 isn’t available.</p>
+        </div>
+      </li>
+      <li class="low-step" data-step="4">
+        <p class="step-label">About the drawing</p>
+        <p class="drawing-note">The methyl “locks” that settle onto the DNA in the cell drawing are our illustration, not a picture of real chemistry.</p>
+        <p class="claim-block">On this view, methylation is not a malfunction: it may be protective when growth isn’t possible, and aging is tied to genes being progressively silenced (see the womb section below).</p>
+        <aside class="caveat">
+          <p>There are no studies of carbon dioxide levels in people who practise tai chi; the idea that it involves hypoventilation is an inference, not a finding.</p>
+        </aside>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 4. NIGHT ============ -->
+<section id="night" class="section section--night">
+  <div class="plate-wrap night-plate" data-plate-fallback="night" aria-hidden="true"><div class="plate" data-plate="night"></div></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <h2 class="section-title">Night</h2>
+      <p class="section-note">Drag the hand around the clock, or focus it and use the arrow keys.</p>
+    </header>
+
+    <div class="night-grid">
+      <figure class="clock reveal">
+        <svg class="clock-svg" id="clock-svg" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+          <defs>
+            <radialGradient id="clock-face">
+              <stop offset="0" stop-color="#16122a"/>
+              <stop offset="1" stop-color="#07060a"/>
+            </radialGradient>
+            <filter id="ring-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="6"/>
+            </filter>
+          </defs>
+          <circle class="clock-glow-ring" id="clock-glow" cx="200" cy="200" r="176" filter="url(#ring-glow)"/>
+          <circle class="clock-face" cx="200" cy="200" r="164" fill="url(#clock-face)"/>
+          <path class="clock-night" id="clock-night" d=""/>
+          <g id="clock-ticks" class="clock-ticks"></g>
+          <g id="clock-rem" class="clock-rem"></g>
+          <text class="clock-word" x="200" y="88" text-anchor="middle">midnight</text>
+          <text class="clock-word" x="318" y="205" text-anchor="end">dawn</text>
+          <text class="clock-word" x="200" y="322" text-anchor="middle">noon</text>
+          <text class="clock-word" x="82" y="205" text-anchor="start">dusk</text>
+          <g class="clock-hand" id="clock-hand">
+            <line x1="200" y1="200" x2="200" y2="64"/>
+            <circle class="clock-knob" cx="200" cy="64" r="13"/>
+          </g>
+          <circle class="clock-hub" cx="200" cy="200" r="7"/>
+        </svg>
+        <div class="clock-hit" id="clock-hit" role="slider" tabindex="0" aria-label="Time of night"
+             aria-valuemin="0" aria-valuemax="1439" aria-valuenow="1260" aria-valuetext="Evening, darkness"></div>
+        <figcaption>Our illustration: the dreaming (REM) arcs and the glow ring are illustrative, not to scale.</figcaption>
+      </figure>
+
+      <div class="night-text" id="night-text">
+        <div class="night-panel" data-phase="day">
+          <p class="night-prompt">Daytime. Move the hand into the shaded night arc.</p>
+        </div>
+        <div class="pull-quote pull-quote--lg night-panel" data-phase="dark">
+          <p data-passage="d1">Darkness is stressful and catabolic.</p>
+        </div>
+        <div class="pull-quote night-panel" data-phase="rest">
+          <p data-passage="d4">In restful sleep, the oxygen tension is frequently low enough, and the carbon dioxide tension high enough, to trigger the multiplication of stem cells and mitochondria.</p>
+        </div>
+        <div class="pull-quote night-panel" data-phase="rem">
+          <p data-passage="d2">During the rapid-eye-movement (dreaming) phase of sleep, breathing is inhibited, and the level of carbon dioxide in the tissues accumulates.</p>
+        </div>
+        <div class="pull-quote night-panel" data-phase="late">
+          <p data-passage="d3">The active, dreaming phase of sleep occurs more frequently in the later part of the night, as morning approaches.</p>
+        </div>
+        <p class="night-readout" aria-hidden="true"><span id="night-phase-word">Evening</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. ANIMALS ============ -->
+<section id="animals" class="section section--animals">
+  <div class="animals-head">
+    <div class="plate-wrap animals-plate" data-plate-fallback="burrow" aria-hidden="true"><div class="plate" data-plate="burrow"></div></div>
+    <div class="wrap">
+      <header class="section-head reveal">
+        <h2 class="section-title">Animals</h2>
+        <p class="lead-note">Of these, only the naked mole rat is a CO2-and-longevity case; the others are here for contrast.</p>
+        <p class="section-note">Tap or press Enter on a card to turn it over.</p>
+      </header>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <ul class="cards">
+      <!-- Mole rat -->
+      <li class="card reveal" data-card>
+        <button type="button" class="card-toggle" aria-pressed="false"><span class="sr-only">Turn over: naked mole rats</span><span class="card-flip-hint card-back-hint" aria-hidden="true">Turn back ↺</span></button>
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="plate-wrap card-plate" data-plate-fallback="mole-rat" aria-hidden="true"><div class="plate" data-plate="mole-rat"></div></div>
+            <div class="card-front-text">
+              <h3 class="card-name">Naked mole rats</h3>
+              <p class="card-hook">Closed burrows, rich in carbon dioxide.</p>
+              <p class="verdict verdict--co2">Burrow CO2 + long life</p>
+            </div>
+            <span class="card-flip-hint" aria-hidden="true">Turn over ↻</span>
+          </div>
+          <div class="card-face card-back">
+            <h3 class="card-name card-name--back">Naked mole rats</h3>
+            <div class="pull-quote pull-quote--card">
+              <p data-passage="mole">They live in burrows that are kept closed, so the percentage of oxygen is lower than in the outside air, and the percentage of carbon dioxide ranges from 0.2% to 5% (atmospheric CO2 is about 0.038).</p>
+            </div>
+            <p class="card-para">In captivity they have lived up to 30 years, 9 or 10 times longer than mice of the same size; a mole rat has never been known to develop cancer.</p>
+            <p class="card-para">Lab measurements may not reflect their natural metabolism, and their high CO2 may compensate for living in the dark.</p>
+          </div>
+        </div>
+      </li>
+
+      <!-- Hive -->
+      <li class="card card--contrast reveal" data-card>
+        <button type="button" class="card-toggle" aria-pressed="false"><span class="sr-only">Turn over: the hive</span><span class="card-flip-hint card-back-hint" aria-hidden="true">Turn back ↺</span></button>
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="plate-wrap card-plate" data-plate-fallback="hive" aria-hidden="true"><div class="plate" data-plate="hive"></div></div>
+            <div class="card-front-text">
+              <h3 class="card-name">The hive</h3>
+              <p class="card-hook">Workers regulate the hive’s carbon dioxide.</p>
+              <p class="verdict verdict--not">CO2 → queen’s ovaries (not her lifespan)</p>
+            </div>
+            <span class="card-flip-hint" aria-hidden="true">Turn over ↻</span>
+          </div>
+          <div class="card-face card-back">
+            <h3 class="card-name card-name--back">The hive</h3>
+            <div class="pull-quote pull-quote--card">
+              <p data-passage="hive">In beehives, the workers carefully regulate the carbon dioxide concentration, which varies from about 0.2% to 6%, similar to that of the mole rat colony.</p>
+            </div>
+            <p class="card-para">Hive CO2 is linked to activating the queen’s ovaries; queen longevity is tied to the type of fat in her tissues, not to CO2.</p>
+          </div>
+        </div>
+      </li>
+
+      <!-- Toad -->
+      <li class="card reveal" data-card>
+        <button type="button" class="card-toggle" aria-pressed="false"><span class="sr-only">Turn over: burrowing toads</span><span class="card-flip-hint card-back-hint" aria-hidden="true">Turn back ↺</span></button>
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="plate-wrap card-plate" data-plate-fallback="toad" aria-hidden="true"><div class="plate" data-plate="toad"></div></div>
+            <div class="card-front-text">
+              <h3 class="card-name">Burrowing toads</h3>
+              <p class="card-hook">As carbon dioxide climbs, what happens to pH?</p>
+              <p class="verdict verdict--neutral">CO2 rises, pH holds</p>
+            </div>
+            <span class="card-flip-hint" aria-hidden="true">Turn over ↻</span>
+          </div>
+          <div class="card-face card-back">
+            <h3 class="card-name card-name--back">Burrowing toads</h3>
+            <div class="pull-quote pull-quote--card">
+              <p data-passage="toad">Despite the increasing carbon dioxide, the pH is kept stable by an increase of bicarbonate.</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <!-- Bat -->
+      <li class="card card--contrast reveal" data-card>
+        <button type="button" class="card-toggle" aria-pressed="false"><span class="sr-only">Turn over: bats</span><span class="card-flip-hint card-back-hint" aria-hidden="true">Turn back ↺</span></button>
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="plate-wrap card-plate card-plate--bat" data-plate-fallback="cave" aria-hidden="true"><div class="plate" data-plate="bat"></div></div>
+            <div class="card-front-text">
+              <h3 class="card-name">Bats</h3>
+              <p class="card-hook">A very high metabolic rate, and a long life for their size.</p>
+              <p class="verdict verdict--not">High CO2 → ammonia protection, not lifespan</p>
+            </div>
+            <span class="card-flip-hint" aria-hidden="true">Turn over ↻</span>
+          </div>
+          <div class="card-face card-back">
+            <h3 class="card-name card-name--back">Bats</h3>
+            <div class="pull-quote pull-quote--card">
+              <p data-passage="bat">Bats have a very high metabolic rate, and an extremely long lifespan for an animal of their size.</p>
+            </div>
+            <p class="card-para">Their high serum CO2 is tied to protection from cave ammonia, not to their lifespan.</p>
+          </div>
+        </div>
+      </li>
+
+      <!-- Bird -->
+      <li class="card card--contrast reveal" data-card>
+        <button type="button" class="card-toggle" aria-pressed="false"><span class="sr-only">Turn over: birds</span><span class="card-flip-hint card-back-hint" aria-hidden="true">Turn back ↺</span></button>
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="plate-wrap card-plate card-plate--bird" data-plate-fallback="bird" aria-hidden="true"><div class="plate" data-plate="bird"></div></div>
+            <div class="card-front-text">
+              <h3 class="card-name">Birds</h3>
+              <p class="card-hook">Faster metabolism than mammals their size, and longer lives.</p>
+              <p class="verdict verdict--not">Long life → fats, not CO2</p>
+            </div>
+            <span class="card-flip-hint" aria-hidden="true">Turn over ↻</span>
+          </div>
+          <div class="card-face card-back">
+            <h3 class="card-name card-name--back">Birds</h3>
+            <div class="pull-quote pull-quote--card">
+              <p data-passage="bird">Birds have a higher metabolic rate than mammals of the same size, and live longer.</p>
+            </div>
+            <p class="card-para">Birds’ long lives come up in the context of fewer highly unsaturated fats, not CO2.</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 6. WOMB ============ -->
+<section id="womb" class="section section--womb">
+  <div class="plate-wrap womb-plate" data-plate-fallback="womb" aria-hidden="true"><div class="plate" data-plate="womb"></div></div>
+  <div class="wrap">
+    <header class="section-head reveal">
+      <h2 class="section-title">The womb</h2>
+    </header>
+    <div class="womb-grid">
+      <figure class="womb-chamber reveal">
+        <canvas class="cell-canvas" id="womb-canvas" aria-hidden="true"></canvas>
+        <figcaption>Our illustration: the cell held at rich CO2 in a warm chamber, its methyl locks releasing one by one.</figcaption>
+      </figure>
+      <div class="womb-text">
+        <div class="pull-quote reveal">
+          <p data-passage="f1">The normal intrauterine level of carbon dioxide is high, and it can be increased or decreased by changes in the mother’s physiology.</p>
+        </div>
+        <div class="pull-quote reveal">
+          <p data-passage="f2">There is some evidence of increased demethylation associated with the low level of oxygen in the uterus.</p>
+        </div>
+      </div>
+    </div>
+    <div class="pull-quote pull-quote--xl womb-q5 reveal">
+      <p data-passage="Q5">If the intrauterine experience, with low oxygen and high carbon dioxide, serves to “reprogram” cells to remove the accumulated effects of age and stress, and so to maximize the developmental potential of the new organism, a life that’s lived with nearly those levels of oxygen and carbon dioxide might be able to avoid the progressive silencing of genes and loss of function that cause aging and degenerative diseases.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KEY IDEAS ============ -->
+<section id="words" class="section section--words">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <h2 class="section-title">Key ideas</h2>
+      <p class="section-note">Five key ideas. Swipe or use the arrows.</p>
+    </header>
+  </div>
+  <div class="words-rail-wrap">
+    <ol class="words-rail" id="words-rail" tabindex="0" aria-label="Five key ideas">
+      <li class="word-card">
+        <div class="pull-quote">
+          <p data-passage="Q1">Very few biologists recognize carbon dioxide’s role as a fundamental, universal protective factor. It may be helpful to consider some of the ways carbon dioxide might be controlling situations that otherwise are poorly understood.</p>
+        </div>
+      </li>
+      <li class="word-card">
+        <div class="pull-quote">
+          <p data-passage="Q2">One possibility is that methylation stabilizes and protects cells when growth and regeneration aren’t possible, and that it’s likely to increase when CO2 isn’t available.</p>
+        </div>
+      </li>
+      <li class="word-card">
+        <div class="pull-quote">
+          <p data-passage="Q3">Carbon dioxide has antioxidant effects, and many other stabilizing actions, including protection against hypoxia and the excitatory effects of intracellular calcium and inflammation.</p>
+        </div>
+      </li>
+      <li class="word-card">
+        <div class="pull-quote">
+          <p data-passage="Q4">A prolonged decrease in carbon dioxide can increase the susceptibility of proteins to glycation (the addition of aldehydes, from polyunsaturated fat peroxidation or methylglyoxal from lactate metabolism, to amino groups), and a similar process is likely to contribute to the methylation of histones, a process that increases with aging.</p>
+        </div>
+      </li>
+      <li class="word-card">
+        <div class="pull-quote">
+          <p data-passage="Q5">If the intrauterine experience, with low oxygen and high carbon dioxide, serves to “reprogram” cells to remove the accumulated effects of age and stress, and so to maximize the developmental potential of the new organism, a life that’s lived with nearly those levels of oxygen and carbon dioxide might be able to avoid the progressive silencing of genes and loss of function that cause aging and degenerative diseases.</p>
+        </div>
+      </li>
+    </ol>
+    <div class="words-nav">
+      <button type="button" class="round-btn" id="words-prev" aria-label="Previous idea">←</button>
+      <span class="words-count" id="words-count" aria-hidden="true"></span>
+      <button type="button" class="round-btn" id="words-next" aria-label="Next idea">→</button>
+    </div>
+  </div>
+  <div class="wrap page-end">
+    <a class="back-top" href="#hero">Back to the cell <span aria-hidden="true">↑</span></a>
+  </div>
+</section>
+
+</main>
+</body>
+</html>
