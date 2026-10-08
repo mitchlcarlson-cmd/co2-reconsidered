@@ -526,8 +526,6 @@ html.low-pinned .low-step.is-active { opacity: 1; transform: none; pointer-event
 .verdict { margin: 0; font-family: var(--display); font-weight: 600; font-size: 14px; line-height: 1.35; padding: 9px 12px; border-radius: 12px; }
 .verdict--co2 { color: #171005; background: linear-gradient(90deg, var(--amber), #ffd59a); box-shadow: 0 0 24px rgba(255, 179, 71, 0.35); }
 .verdict--neutral { color: var(--teal); background: rgba(94, 242, 214, 0.08); border: 1px solid rgba(94, 242, 214, 0.35); }
-.verdict--not { color: var(--ink-3); background: rgba(239, 230, 214, 0.05); border: 1px dashed rgba(239, 230, 214, 0.25); font-weight: 500; }
-.card--contrast .card-front-text .card-name { color: var(--ink-2); }
 .card-flip-hint { position: absolute; top: 14px; right: 14px; z-index: 2; font-size: 12px; font-family: var(--display); color: var(--ink-2); background: rgba(7, 6, 10, 0.6); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); }
 .card-back { padding: 22px 20px; background: linear-gradient(180deg, #15111c, #0b0910); }
 .card-para { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
@@ -541,8 +539,14 @@ html.low-pinned .low-step.is-active { opacity: 1; transform: none; pointer-event
 /* 3D flip only when JS is running (otherwise both faces show, stacked) */
 html.js .card-inner { position: relative; height: 470px; transform-style: preserve-3d; transition: transform .8s var(--ease-out); }
 html.js .card-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-html.js .card-front { min-height: 0; }
-html.js .card-back { transform: rotateY(180deg); overflow-y: auto; }
+/* each face is its own stacking context, so its z-indexed children (text, hint, plate) are
+   covered by the face's backface-visibility instead of painting mirrored through the flip */
+html.js .card-front { min-height: 0; transform: rotateY(0deg); z-index: 1; }
+html.js .card-back { transform: rotateY(180deg); z-index: 1; overflow-y: auto; }
+/* fallback: hide the inactive face once the card is edge-on (~90deg at .1s into the .8s flip) */
+html.js .card-face { transition: box-shadow .3s var(--ease-out), border-color .3s var(--ease-out), visibility 0s linear .1s; }
+html.js .card.is-flipped .card-front,
+html.js .card:not(.is-flipped) .card-back { visibility: hidden; }
 html.js .card.is-flipped .card-inner { transform: rotateY(180deg); }
 html.js .card.is-flipped .card-toggle:active + .card-inner { transform: rotateY(180deg) scale(0.97); }
 /* only the face you can see takes clicks; the whole visible face is clickable */
@@ -794,6 +798,7 @@ html.js-anim .reveal { opacity: 0; transform: translateY(24px); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
   html.js .card-inner { transition: transform .2s var(--ease-out); }
+  html.js .card-face { transition: box-shadow .3s var(--ease-out), border-color .3s var(--ease-out), visibility 0s linear .025s; }
   .plate { transition: opacity .3s; }
 }
 
